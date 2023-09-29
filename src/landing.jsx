@@ -8,7 +8,7 @@ function Landing(){
 
     return(
         <>
-            <div className='grid-container'>
+        <div className='grid-container'>
          <Sidebar />
          <Home />
          </div>

@@ -20,7 +20,7 @@ function Sidebar(){
                     </a>
                 </li>
                 <li className='sidebar-list-item'>
-                    <a href="">
+                    <a href="/tableOrder">
                         <BsFillArchiveFill className='icon'/>Table Orders
                     </a>
                 </li>
