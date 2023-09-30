@@ -22,8 +22,9 @@ function NewOrders()
     const [itemData, setItemData] = useState([]);
     const [popUpArray, setPopUpArray] = useState([]);
     const [open, setOpen] = React.useState(false);
+    const [taxedRate, setTaxedRate] = useState([]);
     var insideData = [];
-    var taxedRate;
+    
 
     const handleClickOpen = (index) => {
         
@@ -31,6 +32,7 @@ function NewOrders()
             insideData.push(newOrderData[index]["orderItems"][key]);
           });
           setPopUpArray(insideData);
+          setTaxedRate(newOrderData[index]["total_price"] + (newOrderData[index]["total_price"] * 0.05));
         setOpen(true);
       };
     
@@ -137,7 +139,7 @@ function NewOrders()
                 <TableCell><b>Total</b></TableCell>
                 <TableCell align="right">
                     <b>
-                    ₹{OrderData.total_price + OrderData.total_price*0.05}
+                    ₹{taxedRate}
                     </b>
                 </TableCell>
             </TableRow>
