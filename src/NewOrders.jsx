@@ -24,7 +24,6 @@ function NewOrders()
     const [open, setOpen] = React.useState(false);
     const [taxedRate, setTaxedRate] = useState([]);
     var insideData = [];
-    
 
     const handleClickOpen = (index) => {
         
@@ -36,6 +35,14 @@ function NewOrders()
         setOpen(true);
       };
     
+      const rejectOrder = () => {
+        setOpen(false);
+      };
+
+      const acceptOrder = () => {
+        setOpen(false);
+      };
+
       const handleClose = () => {
         setOpen(false);
       };
@@ -92,6 +99,8 @@ function NewOrders()
                 Total Quantity: {OrderData.total_quantity}
                 <br/>
                 Total Price: ₹{OrderData.total_price}
+                <br/>
+                Time: {OrderData.hour}:{OrderData.minute}
             </Typography>
             </CardContent>
             <CardActions>
@@ -148,8 +157,8 @@ function NewOrders()
                 </TableContainer>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleClose}>Reject</Button>
-            <Button onClick={handleClose} autoFocus>
+            <Button onClick={rejectOrder}>Reject</Button>
+            <Button onClick={acceptOrder} autoFocus>
                 Accept
             </Button>
             </DialogActions>
