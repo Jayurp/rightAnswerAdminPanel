@@ -25,7 +25,6 @@ function Home(){
 
       useEffect(() => {
         setMonth(currentMonth);
-        console.log(month);
          },[]);
 
       useEffect(() => {

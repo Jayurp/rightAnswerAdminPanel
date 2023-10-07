@@ -16,8 +16,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-function NewOrders()
+function CurrentOrders()
 {
+
     const [newOrderData, setNewOrderData] = useState([]);
     const [itemData, setItemData] = useState([]);
     const [popUpArray, setPopUpArray] = useState([]);
@@ -25,6 +26,7 @@ function NewOrders()
     const [taxedRate, setTaxedRate] = useState([]);
     const [Index, setIndex] = useState();
     var insideData = [];
+
 
     const handleClickOpen = (index) => {
         setIndex(index);
@@ -35,13 +37,9 @@ function NewOrders()
           setTaxedRate(newOrderData[index]["total_price"] + (newOrderData[index]["total_price"] * 0.05));
         setOpen(true);
       };
-    
-      const rejectOrder = () => {
-        setOpen(false);
-      };
 
       const acceptOrder = () => {
-        fetch('http://localhost:4000/acceptOrder', { 
+        fetch('http://localhost:4000/doneOrder', {
             method: 'POST',
             body: JSON.stringify(newOrderData[Index]),
             headers: {
@@ -55,12 +53,10 @@ function NewOrders()
                 return response.json();
                 })
                 .then(data => {  
-                  console.log(data);
                 })
                 .catch(error => {
                 console.error('Fetch error:', error);
                 });
-
         setOpen(false);
       };
 
@@ -69,7 +65,7 @@ function NewOrders()
       };
 
     useEffect(() => {
-        fetch('http://localhost:4000/getNewOrders', {
+        fetch('http://localhost:4000/getCurrentOrders', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -82,6 +78,7 @@ function NewOrders()
             return response.json();
             })
             .then(data => {  
+                
                 var temp_order = [];
                 var temp_itemData = [];
                 var temp_totalAmount = [];
@@ -106,11 +103,14 @@ function NewOrders()
 
     return(
         <>
-        <h1>New Orders</h1>
+        <div id="currentOrders">
+        <h1>Current Orders</h1>
+        </div>
+
         <div id="orderCards">
         {newOrderData.map((OrderData, index) => (
             <>
-            <Card  key={OrderData.orderItems} sx={{ minWidth: 350, maxWidth:350, marginTop:"10%", marginLeft:"-25%"}}>
+            <Card  key={OrderData.orderItems} sx={{maxWidth:350, minWidth:350, marginTop:"10%", marginLeft:"-15%"}}>
             <CardContent>
             <Typography variant="h5" component="div">
             Table Number : {OrderData.table}
@@ -177,9 +177,8 @@ function NewOrders()
                 </TableContainer>
             </DialogContent>
             <DialogActions>
-            <Button onClick={rejectOrder}>Reject</Button>
             <Button onClick={acceptOrder} autoFocus>
-                Accept
+                Mark as Done
             </Button>
             </DialogActions>
             </Dialog>
@@ -191,4 +190,4 @@ function NewOrders()
     )
 }
 
-export default NewOrders;
+export default CurrentOrders;
