@@ -333,7 +333,53 @@ app.get('/generate-invoice', (req, res) => {
   // Start the Express serv
 
 
-  function generateInvoice(doc,table, price,year,month,date ) {
+  app.post('/invoice', async (req, res) => {
+	// const starCountRef = ref(db);
+    //     get(child(starCountRef, "orders/pastOrders")).then((snapshot) => {
+    //       if (snapshot.exists()) { 
+	// 		console.log(snapshot.val());
+	// 		//   res.status(200).send(snapshot.val());
+    //       } else {
+    //         console.log("post");
+    //       }
+    //     }).catch((error) => {
+    //       console.error(error);
+    //     });	
+	try {
+		var table = req.body.table;
+				var price = req.body.total_price;
+				 var quantity = req.body.total_quantity; ;
+				var year = req.body.year;
+				// var date = req.body.date;
+				var month = req.body.month;
+				console.log(table, price, quantity, year, month,);
+			  const doc = new PDFDocument();
+
+		  // Define the filename for the downloadable invoice
+		  const fileName = `invoice_${month}_${year}.pdf`;
+			
+		  // Set the response headers for PDF download
+		  res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+		  res.setHeader('Content-Type', 'application/pdf');
+	  
+		  // Pipe the PDF document to the response stream
+		  doc.pipe(res);
+	  
+		  await generateInvoice(doc, table, price,year,month);
+	  
+		  // End the document and send it as a downloadable PDF
+		  await doc.end();
+	// 
+	} catch (error) {
+		console.log(error);
+		res.status(200).send(req.body);
+	}
+	
+})
+
+
+
+  function generateInvoice(doc,table, price,year,month ) {
 	// Define fonts and sizes
 	doc.font('Helvetica-Bold').fontSize(24);
   
@@ -362,6 +408,10 @@ app.get('/generate-invoice', (req, res) => {
 	doc.fontSize(12).text('Thank you for your business!', { align: 'center' });
 
 	doc.moveDown(2);
-	doc.fontSize(12).text('This is Auto-generated Invoice at ${date}/${month}/${year}', { align: 'center' });
+	doc.fontSize(12).text('This is Auto-generated Invoice at ${month}/${year}', { align: 'center' });
   }
   
+
+
+
+
