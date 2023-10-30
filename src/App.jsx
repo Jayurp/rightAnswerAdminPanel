@@ -8,20 +8,41 @@ import { BrowserRouter } from 'react-router-dom';
 import Landing from './landing'
 import AddItem from './addItems'
 import TableOrder from './TableOrder'
-import Orderhistory from './Orderhistory'
+import Orderhistory from './Orderhistory';
+import PrivateRoute from './PrivateRoute';
+import {AuthProvider} from './Authcontext/Authcontext';
+import Template from './components/template';
+
+
 function App() {
   
 
   return (
     <>
+    <AuthProvider>
     <BrowserRouter>
     <Routes>
-    <Route exact path="" element={<Landing/>}/>
-    <Route exact path="addItem" element={<AddItem/>}/>
-    <Route exact path="tableOrder" element={<TableOrder/>}/>
-    <Route exact path="orderhistory" element={<Orderhistory/>}/>
+    <Route exact path="/login" element={<Template/>}/>
+
+    <Route path="/" element={
+        <PrivateRoute>
+          <Landing />
+        </PrivateRoute>}/>
+        <Route path="/addItem" element={
+        <PrivateRoute>
+          <AddItem />
+        </PrivateRoute>}/>
+        <Route path="/tableOrder" element={
+        <PrivateRoute>
+          <TableOrder />
+        </PrivateRoute>}/>
+        <Route path="/orderhistory" element={
+        <PrivateRoute>
+          <Orderhistory />
+        </PrivateRoute>}/>
     </Routes>
     </BrowserRouter>
+    </AuthProvider>
     </>
   );
 }
