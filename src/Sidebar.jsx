@@ -25,7 +25,7 @@ function Sidebar(){
                     </a>
                 </li>
                 <li className='sidebar-list-item'>
-                    <a href="">
+                    <a href="/orderhistory">
                         <BsFillGrid3X3GapFill className='icon'/>Order History
                     </a>
                 </li>

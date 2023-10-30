@@ -16,7 +16,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-function CurrentOrders()
+function Orderhis()
 {
 
     const [newOrderData, setNewOrderData] = useState([]);
@@ -26,11 +26,7 @@ function CurrentOrders()
     const [taxedRate, setTaxedRate] = useState([]);
     const [Index, setIndex] = useState();
     var insideData = [];
-    const [isChecked, setIsChecked] = useState(false);
 
-    const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
-      };
 
     const handleClickOpen = (index) => {
         setIndex(index);
@@ -43,25 +39,30 @@ function CurrentOrders()
       };
 
       const acceptOrder = () => {
-        newOrderData[Index].payment = isChecked;
-        fetch('http://localhost:4000/doneOrder', {
+        fetch('http://localhost:4000/invoice', {
             method: 'POST',
-            body: JSON.stringify(newOrderData[Index]),
             headers: {
-                'Content-type': 'application/json; charset=UTF-8',
+                'Content-Type': 'application/json',
             },
-                })
-                .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-                })
-                .then(data => {  
-                })
-                .catch(error => {
-                console.error('Fetch error:', error);
-                });
+            body: JSON.stringify(newOrderData[Index]),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+            }, 1000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
         setOpen(false);
       };
 
@@ -70,8 +71,12 @@ function CurrentOrders()
       };
 
     useEffect(() => {
-        fetch('http://localhost:4000/getCurrentOrders', {
-        method: 'GET',
+        fetch('http://localhost:4000/getPastOrders', {
+        method: 'POST',
+        body: JSON.stringify({
+            "month":"10",
+            "year":"2023"
+          }),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },
@@ -83,7 +88,7 @@ function CurrentOrders()
             return response.json();
             })
             .then(data => {  
-                
+                console.log(data);
                 var temp_order = [];
                 var temp_itemData = [];
                 var temp_totalAmount = [];
@@ -108,14 +113,10 @@ function CurrentOrders()
 
     return(
         <>
-        <div id="currentOrders">
-        <h1>Current Orders</h1>
-        </div>
-
         <div id="orderCards">
         {newOrderData.map((OrderData, index) => (
             <>
-            <Card  key={OrderData.orderItems} sx={{maxWidth:350, minWidth:350, marginTop:"10%", marginLeft:"-15%"}}>
+            <Card  key={OrderData.orderItems} sx={{maxWidth:350, minWidth:350, marginTop:"10%", marginLeft:"25%"}}>
             <CardContent>
             <Typography variant="h5" component="div">
             Table Number : {OrderData.table}
@@ -180,12 +181,10 @@ function CurrentOrders()
             </TableBody>
                 </Table>
                 </TableContainer>
-            <br/>
-            <input type="checkbox" id="paymentCheckbox" checked={isChecked} onChange={handleCheckboxChange}/> Payment Done
             </DialogContent>
             <DialogActions>
-            <Button onClick={acceptOrder} autoFocus>
-                Mark as Done
+            <Button onClick={acceptOrder} id="downloadButton" autoFocus>
+                Get Invoice
             </Button>
             </DialogActions>
             </Dialog>
@@ -197,4 +196,4 @@ function CurrentOrders()
     )
 }
 
-export default CurrentOrders;
+export default Orderhis;
